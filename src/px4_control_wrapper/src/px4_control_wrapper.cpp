@@ -1,11 +1,11 @@
-#include "../include/px4_control_wrapper/px4_velocity_control_wrapper.h"
+#include "../include/px4_control_wrapper/px4_control_wrapper.h"
 
-void px4_velocity_control_wrapper::data_valid_sub_cb(const std_msgs::BoolConstPtr &msg)
+void px4_control_wrapper::data_valid_sub_cb(const std_msgs::BoolConstPtr &msg)
 {
   _data_valid = msg.get()->data;
 }
 
-void px4_velocity_control_wrapper::tgt_vel_msg_sub_cb(const geometry_msgs::TwistStampedConstPtr &msg)
+void px4_control_wrapper::tgt_vel_msg_sub_cb(const geometry_msgs::TwistStampedConstPtr &msg)
 {
   if(!_is_land_flag&&_is_start_other_control_flag)
   {
@@ -39,7 +39,7 @@ void px4_velocity_control_wrapper::tgt_vel_msg_sub_cb(const geometry_msgs::Twist
   }
 }
 
-void px4_velocity_control_wrapper::px4_rc_msg_sub_cb(const mavros_msgs::RCInConstPtr &msg)
+void px4_control_wrapper::px4_rc_msg_sub_cb(const mavros_msgs::RCInConstPtr &msg)
 {
   if(_is_rc_control)
   {
@@ -72,13 +72,13 @@ void px4_velocity_control_wrapper::px4_rc_msg_sub_cb(const mavros_msgs::RCInCons
   }
 }
 
-void *px4_velocity_control_wrapper::offboard_run(void *args)
+void *px4_control_wrapper::offboard_run(void *args)
 {
-  px4_velocity_control_wrapper* control_wrapper = (px4_velocity_control_wrapper*)(args);
+  px4_control_wrapper* control_wrapper = (px4_control_wrapper*)(args);
   ros::Rate rate(control_wrapper->_run_frequen_hz);
   while(ros::ok())
   {
-    if(!_is_vr_control)
+    if(!control_wrapper->_is_vr_control)
     {
       if(control_wrapper->_control_mode == 0)
       {
@@ -107,7 +107,7 @@ void *px4_velocity_control_wrapper::offboard_run(void *args)
 }
 
 
-void px4_velocity_control_wrapper::uav_pos_msg_sub_cb(const geometry_msgs::PoseStampedConstPtr &msg)
+void px4_control_wrapper::uav_pos_msg_sub_cb(const geometry_msgs::PoseStampedConstPtr &msg)
 {
   _current_height = msg.get()->pose.position.z;
   if(_is_local_pos)
@@ -140,7 +140,7 @@ void px4_velocity_control_wrapper::uav_pos_msg_sub_cb(const geometry_msgs::PoseS
   }
 }
 
-void px4_velocity_control_wrapper::tgt_pos_msg_sub_cb(const geometry_msgs::PoseStampedConstPtr &msg)
+void px4_control_wrapper::tgt_pos_msg_sub_cb(const geometry_msgs::PoseStampedConstPtr &msg)
 {
   _ref_pos_x = msg.get()->pose.position.x;
   _ref_pos_y = msg.get()->pose.position.y;
@@ -155,9 +155,9 @@ void px4_velocity_control_wrapper::tgt_pos_msg_sub_cb(const geometry_msgs::PoseS
   }
 }
 
-void *px4_velocity_control_wrapper::auto_run(void *args)
+void *px4_control_wrapper::auto_run(void *args)
 {
-  px4_velocity_control_wrapper* control_wrapper = (px4_velocity_control_wrapper*)(args);
+  px4_control_wrapper* control_wrapper = (px4_control_wrapper*)(args);
   ros::Rate rate(control_wrapper->_run_frequen_hz);
   while(ros::ok()&&control_wrapper->_is_vr_control)
   {
@@ -184,20 +184,20 @@ void *px4_velocity_control_wrapper::auto_run(void *args)
     rate.sleep();
   }
   pthread_join(control_wrapper->_offboard_control_run,NULL);
-  _is_start_vr_control = false;
+  control_wrapper->_is_start_vr_control = false;
   control_wrapper->_ref_velocity_x = 0;
   control_wrapper->_ref_velocity_y = 0;
   control_wrapper->_ref_velocity_z = 0;
 }
 
 
-void px4_velocity_control_wrapper::vr_control_msg_sub_cb(const std_msgs::BoolConstPtr &msg)
+void px4_control_wrapper::vr_control_msg_sub_cb(const std_msgs::BoolConstPtr &msg)
 {
   _is_vr_control = msg.get()->data;
   if(_is_start_vr_control&&!_is_start_vr_control)
   {
     _is_start_vr_control = true;
-    int flag_thread = pthread_create(&_auto_run,NULL,&px4_velocity_control_wrapper::auto_run,this);
+    int flag_thread = pthread_create(&_auto_run,NULL,&px4_control_wrapper::auto_run,this);
     if (flag_thread < 0)
     {
       ROS_ERROR("pthread_create ros_process_thread failed: %d\n", flag_thread);
@@ -205,7 +205,7 @@ void px4_velocity_control_wrapper::vr_control_msg_sub_cb(const std_msgs::BoolCon
   }
 }
 
-void px4_velocity_control_wrapper::arm_msg_sub_cb(const std_msgs::BoolConstPtr &msg)
+void px4_control_wrapper::arm_msg_sub_cb(const std_msgs::BoolConstPtr &msg)
 {
   if(_is_vr_control)
   {
@@ -222,7 +222,7 @@ void px4_velocity_control_wrapper::arm_msg_sub_cb(const std_msgs::BoolConstPtr &
   }
 }
 
-void px4_velocity_control_wrapper::flight_mode_msg_sub_cb(const std_msgs::Int8ConstPtr &msg)
+void px4_control_wrapper::flight_mode_msg_sub_cb(const std_msgs::Int8ConstPtr &msg)
 {
   /*
   * 0: the manual mode
@@ -248,11 +248,11 @@ void px4_velocity_control_wrapper::flight_mode_msg_sub_cb(const std_msgs::Int8Co
 }
 
 
-void px4_velocity_control_wrapper::px4_state_msg_sub_cb(const mavros_msgs::StateConstPtr &msg)
+void px4_control_wrapper::px4_state_msg_sub_cb(const mavros_msgs::StateConstPtr &msg)
 {
   _px4_current_state = *msg;
 }
-px4_velocity_control_wrapper::px4_velocity_rc_control_wrapper()
+px4_control_wrapper::px4_control_wrapper()
 {
   ros::NodeHandle n("~");
   n.getParam("px4_ref_vel_msg_pub_topic",_px4_ref_vel_msg_pub_topic);
@@ -306,24 +306,24 @@ px4_velocity_control_wrapper::px4_velocity_rc_control_wrapper()
   std::string px4_set_mode_client_topic = "/mavros/set_mode";
   n.getParam("px4_set_mode_client_topic",px4_set_mode_client_topic);
 
-  _px4_state_msg_sub = n.subscribe(px4_state_msg_sub_topic,1,&px4_velocity_control_wrapper::px4_state_msg_sub_cb,this);
+  _px4_state_msg_sub = n.subscribe(px4_state_msg_sub_topic,1,&px4_control_wrapper::px4_state_msg_sub_cb,this);
   _px4_arming_client = n.serviceClient<mavros_msgs::CommandBool>(px4_arming_client_topic);
   _px4_set_mode_client = n.serviceClient<mavros_msgs::SetMode>(px4_set_mode_client_topic);
 
 
-  _uav_pos_msg_sub = n.subscribe(uav_pos_sub_topic,1,&px4_velocity_control_wrapper::uav_pos_msg_sub_cb,this);
+  _uav_pos_msg_sub = n.subscribe(uav_pos_sub_topic,1,&px4_control_wrapper::uav_pos_msg_sub_cb,this);
 
-  _tgt_vel_msg_sub = n.subscribe(_tgt_vel_msg_sub_topic,1,&px4_velocity_control_wrapper::tgt_vel_msg_sub_cb,this);
-  _tgt_pos_msg_sub = n.subscribe(tgt_pos_msg_sub_topic,1,&px4_velocity_control_wrapper::tgt_pos_msg_sub_cb,this);
+  _tgt_vel_msg_sub = n.subscribe(_tgt_vel_msg_sub_topic,1,&px4_control_wrapper::tgt_vel_msg_sub_cb,this);
+  _tgt_pos_msg_sub = n.subscribe(tgt_pos_msg_sub_topic,1,&px4_control_wrapper::tgt_pos_msg_sub_cb,this);
 
-  _px4_rc_msg_sub = n.subscribe(_px4_rc_msg_sub_topic,1,&px4_velocity_control_wrapper::px4_rc_msg_sub_cb,this);
-  _data_valid_sub = n.subscribe(_data_valid_sub_topic,1,&px4_velocity_control_wrapper::data_valid_sub_cb,this);
+  _px4_rc_msg_sub = n.subscribe(_px4_rc_msg_sub_topic,1,&px4_control_wrapper::px4_rc_msg_sub_cb,this);
+  _data_valid_sub = n.subscribe(_data_valid_sub_topic,1,&px4_control_wrapper::data_valid_sub_cb,this);
 
-  _vr_control_sub = n.subscribe(vr_control_sub_topic,1,&px4_velocity_control_wrapper::vr_control_msg_sub_cb,this);
+  _vr_control_sub = n.subscribe(vr_control_sub_topic,1,&px4_control_wrapper::vr_control_msg_sub_cb,this);
 
-  _arm_com_sub = n.subscribe(arm_sub_topic,1,&px4_velocity_control_wrapper::arm_msg_sub_cb,this);
+  _arm_com_sub = n.subscribe(arm_sub_topic,1,&px4_control_wrapper::arm_msg_sub_cb,this);
 
-  _flight_mode_msg_sub = n.subscribe(fligth_mode_msg_pub_topic,1,&px4_velocity_control_wrapper::flight_mode_msg_sub_cb,this);
+  _flight_mode_msg_sub = n.subscribe(fligth_mode_msg_pub_topic,1,&px4_control_wrapper::flight_mode_msg_sub_cb,this);
 
   _px4_ref_vel_msg_pub = n.advertise<geometry_msgs::Twist>(_px4_ref_vel_msg_pub_topic,1);
   _px4_ref_pos_msg_pub = n.advertise<geometry_msgs::PoseStamped>(px4_ref_pos_msg_pub_topic,1);
@@ -370,7 +370,7 @@ px4_velocity_control_wrapper::px4_velocity_rc_control_wrapper()
   _is_start_vr_control = false;
   _is_vr_control = false;
 
-  int flag_thread = pthread_create(&_offboard_control_run,NULL,&px4_velocity_control_wrapper::offboard_run,this);
+  int flag_thread = pthread_create(&_offboard_control_run,NULL,&px4_control_wrapper::offboard_run,this);
   if (flag_thread < 0)
   {
     ROS_ERROR("pthread_create ros_process_thread failed: %d\n", flag_thread);

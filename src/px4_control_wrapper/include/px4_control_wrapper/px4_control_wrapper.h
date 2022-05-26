@@ -1,5 +1,5 @@
-#ifndef PX4_VELOCITY_CONTROL_WRAPPER_H
-#define PX4_VELOCITY_CONTROL_WRAPPER_H
+#ifndef PX4_CONTROL_WRAPPER_H
+#define PX4_CONTROL_WRAPPER_H
 #include <pthread.h>
 #include "geometry_msgs/Twist.h"
 #include "geometry_msgs/TwistStamped.h"
@@ -12,10 +12,10 @@
 #include "iostream"
 #include "geometry_msgs/PoseStamped.h"
 #include "std_msgs/Int8.h"
-class px4_velocity_control_wrapper
+class px4_control_wrapper
 {
 public:
-  px4_velocity_control_wrapper();
+  px4_control_wrapper();
   void tgt_vel_msg_sub_cb(const geometry_msgs::TwistStampedConstPtr& msg);
   void tgt_pos_msg_sub_cb(const geometry_msgs::PoseStampedConstPtr& msg);
   void px4_rc_msg_sub_cb(const mavros_msgs::RCInConstPtr& msg);
@@ -110,4 +110,4 @@ private:
   bool _is_vr_control;
 };
 
-#endif // PX4_VELOCITY_CONTROL_WRAPPER_H
+#endif // PX4_CONTROL_WRAPPER_H

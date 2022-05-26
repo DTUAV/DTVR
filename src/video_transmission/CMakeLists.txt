@@ -1,20 +1,25 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(px4_control_wrapper)
+project(video_transmission)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
-# add_compile_options(-std=c++11)
+ add_compile_options(-std=c++11)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   roscpp
+  nodelet
+  sensor_msgs
+  cv_bridge
+  image_transport
+  dt_common
+  dt_message_package
 )
-
+find_package(OpenCV REQUIRED)
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
-
-
+include_directories(${OpenCV_INCLUDE_DIRS})
 
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
@@ -103,7 +108,8 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES px4_control_wrapper
+#  LIBRARIES video_transmission
+
 #  CATKIN_DEPENDS roscpp
 #  DEPENDS system_lib
 )
@@ -115,13 +121,13 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-# include
+ include
   ${catkin_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/px4_control_wrapper.cpp
+#   src/${PROJECT_NAME}/video_transmission.cpp
 # )
 
 ## Add cmake target dependencies of the library
@@ -132,20 +138,8 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-# add_executable(${PROJECT_NAME}_node src/px4_control_wrapper_node.cpp)
-add_executable(px4_velocity_auto_control_wrapper src/px4_velocity_auto_control_wrapper src/px4_velocity_auto_control_wrapper_main.cpp)
-target_link_libraries(px4_velocity_auto_control_wrapper
-   ${catkin_LIBRARIES}
- )
-add_executable(px4_velocity_rc_control_wrapper src/px4_velocity_rc_control_wrapper src/px4_velocity_rc_control_wrapper_main.cpp)
-target_link_libraries(px4_velocity_rc_control_wrapper
-   ${catkin_LIBRARIES}
- )
+add_executable(${PROJECT_NAME} src/video_transmission.cpp src/main.cpp)
 
-add_executable(px4_control_wrapper src/px4_control_wrapper src/px4_control_wrapper_main.cpp)
-target_link_libraries(px4_control_wrapper
-   ${catkin_LIBRARIES}
- )
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
 ## target back to the shorter version for ease of user use
@@ -157,9 +151,10 @@ target_link_libraries(px4_control_wrapper
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(${PROJECT_NAME}_node
-#   ${catkin_LIBRARIES}
-# )
+ target_link_libraries(${PROJECT_NAME}
+   ${catkin_LIBRARIES}
+   ${OpenCV_LIBS}
+ )
 
 #############
 ## Install ##
@@ -208,7 +203,7 @@ target_link_libraries(px4_control_wrapper
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_px4_control_wrapper.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_video_transmission.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()

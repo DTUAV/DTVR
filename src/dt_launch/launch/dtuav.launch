@@ -218,4 +218,8 @@
       <param name="target_cmd_type_pub_topic" value="/target_cmd_type"/>
       </node>
 
+      <!--
+      <include file="$(find mavros)/launch/px4.launch">
+      </include>
+      -->
 </launch>

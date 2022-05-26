@@ -45,6 +45,7 @@ private:
   ros::Publisher _target_fmode_pub;
   ros::Publisher _vr_control_pub;
   ros::Publisher _computer_cmd_pub;
+  ros::Publisher _apply_cam_pub;
 
   int _sourceID;
   int _targetID;

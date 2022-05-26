@@ -1845,5 +1845,13 @@ struct UavInfo
   float Remaining;//the remaining of battery
   XTOSTRUCT(O(PosX,PosY,PosZ,RotX,RotY,RotZ,RotW,LVelX,LVelY,LVelZ,AVelX,AVelY,AVelZ,NetPx4,IsArm,FMode,Voltage,Remaining));
 };
+
+#define ApplyCameraID 604
+struct ApplyCameraMsg
+{
+  bool isOpen;
+  XTOSTRUCT(O(isOpen));
+};
+
 }
 #endif // DEFINE_COMMON_H

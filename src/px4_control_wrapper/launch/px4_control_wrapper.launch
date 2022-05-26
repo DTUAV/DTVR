@@ -1,5 +1,5 @@
 <launch>
-<node name="px4_velocity_rc_control_wrapper" pkg="px4_control_wrapper" type="px4_velocity_rc_control_wrapper" output="screen">
+<node name="px4_control_wrapper" pkg="px4_control_wrapper" type="px4_control_wrapper" output="screen">
       <param name="px4_ref_vel_msg_pub_topic" value="/mavros/setpoint_velocity/cmd_vel_unstamped"/>        <!--The Target Velocity Message to PX4-->
       <param name="tgt_vel_msg_sub_topic" value="/other_controller/target_velocity"/>                      <!--The Target Velocity from Other Controller-->
       <param name="px4_ref_pos_msg_pub_topic" value="/mavros/setpoint_position/pose"/>

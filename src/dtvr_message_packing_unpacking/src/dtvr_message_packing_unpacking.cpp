@@ -130,6 +130,12 @@ dtvr_message_packing_unpacking::dtvr_message_packing_unpacking()
   }
   std::cout<<"message_packing_unpacking--ComputerCmdMessagePubTopic: "<<ComputerCmdPubTopic<<std::endl;
 
+  std::string ApplyCamPubTopic = "/R_UAV_0/Apply/Camera";
+  if(!n.getParam("ApplyCameraMessagePubTopic",ApplyCamPubTopic))
+  {
+    std::cout<<"message_packing_unpacking--ApplyCameraMessagePubTopic No Configure"<<std::endl;
+  }
+  std::cout<<"message_packing_unpacking--ApplyCameraMessagePubTopic: "<<ApplyCamPubTopic<<std::endl;
   _cloud_msg_pub= n.advertise<dt_message_package::CloudMessage>(CloudMsgPubTopic,1);
   _target_pos_pub = n.advertise<geometry_msgs::PoseStamped>(TargetPosPubTopic,1);
   _target_vel_pub = n.advertise<geometry_msgs::TwistStamped>(TargetVelPubTopic,1);
@@ -137,6 +143,7 @@ dtvr_message_packing_unpacking::dtvr_message_packing_unpacking()
   _target_fmode_pub = n.advertise<std_msgs::Int8>(TargetFModePubTopic,1);
   _vr_control_pub = n.advertise<std_msgs::Bool>(VRControlPubTopic,1);
   _computer_cmd_pub = n.advertise<std_msgs::Bool>(ComputerCmdPubTopic,1);
+  _apply_cam_pub = n.advertise<std_msgs::Bool>(ApplyCamPubTopic,1);
 
   int flag_thread = pthread_create(&_runThread,NULL,&dtvr_message_packing_unpacking::run,this);
   if (flag_thread < 0) {
@@ -395,6 +402,18 @@ void dtvr_message_packing_unpacking::cloud_msg_cb(const dt_message_package::Clou
       std_msgs::Bool computerCmdMsg;
       computerCmdMsg.data = computerControlMsg.IsClose;
       _computer_cmd_pub.publish(computerCmdMsg);
+    }
+  }
+    break;
+  case ApplyCameraID:
+  {
+    ApplyCameraMsg applyCamMsg;
+    bool isLoad = x2struct::X::loadjson(msg.get()->MessageData,applyCamMsg,false);
+    if(isLoad)
+    {
+      std_msgs::Bool apply;
+      apply.data = applyCamMsg.isOpen;
+      _apply_cam_pub.publish(apply);
     }
   }
     break;

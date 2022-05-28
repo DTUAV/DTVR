@@ -9,6 +9,7 @@
     <param name="ros_pub_topic" value="/R_UAV_1/Message_from_Cloud"/>
     <param name="ros_iot_state_pub_topic" value="/R_UAV_1/Cloud_State"/>
     <param name="object_name" value="R_UAV_1"/>
+    <param name="is_close_infor" value="false"/>
   </node>
 
 <node name="packing_and_unpacking_node" pkg="dtvr_message_packing_unpacking" type="dtvr_message_packing_unpacking_node" output="screen">

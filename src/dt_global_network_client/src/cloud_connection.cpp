@@ -49,6 +49,7 @@ void iot_msg_cb(const dt_message_package::CloudMessage::ConstPtr& msg)
 }
 int32_t state_logcb(int32_t code, char *message)
 {
+  if(!is_close_infor)
   printf("%s", message);
   return 0;
 }
@@ -168,25 +169,27 @@ int main(int argc, char *argv[])
 {
   ros::init(argc, argv, "iot_conneection");
   ros::NodeHandle nh("~");
-  string str_key  = "product_key";
+  string str_key  = "h7zmo4JvXUW";
   nh.getParam("product_key",str_key);
   product_key = (char *)str_key.c_str();
-  string str_name = "device_name";
+  string str_name = "PhysicalUAV1";
   nh.getParam("device_name",str_name);
   device_name = (char *)str_name.c_str();
-  string str_sec = "device_secret";
+  string str_sec = "e2c9e07f96d7ab4d91ebbb2582a76fcc";
   nh.getParam("device_secret",str_sec);
   device_secret = (char *)str_sec.c_str();
-  string str_pub = "iot_pub_topic";
+  string str_pub = "/h7zmo4JvXUW/PhysicalUAV1/user/PhysicalUAV1_Pub";
   nh.getParam("iot_pub_topic",str_pub);
   iot_pub_topic = (char *)str_pub.c_str();
-  string str_sub = "iot_sub_topic";
+  string str_sub = "/h7zmo4JvXUW/PhysicalUAV1/user/PhysicalUAV1_Sub";
   nh.getParam("iot_sub_topic",str_sub);
   iot_sub_topic = (char *)str_sub.c_str();
   nh.getParam("ros_sub_topic",ros_sub_topic);
   nh.getParam("ros_pub_topic",ros_pub_topic);
   nh.getParam("object_name",object_name);
   nh.getParam("ros_iot_state_pub_topic",ros_iot_state_pub_topic);
+  is_close_infor = false;
+  nh.getParam("is_close_infor",is_close_infor);
   iot_msg_pub = nh.advertise<dt_message_package::CloudMessage>(ros_pub_topic, 10);
   iot_state_pub = nh.advertise<dt_message_package::CloudStateMessage>(ros_iot_state_pub_topic,1);
   iot_msg_sub = nh.subscribe(ros_sub_topic, 1, iot_msg_cb);

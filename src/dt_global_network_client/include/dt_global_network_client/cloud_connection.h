@@ -26,6 +26,7 @@ char       *url = "iot-as-mqtt.cn-shanghai.aliyuncs.com";
 char        host[100] = {0};
 uint16_t    port = 443;
 aiot_sysdep_network_cred_t cred;
+bool  is_close_infor;
 
 char *product_key       = "a1mcqCrCCBy";
 char *device_name       = "MainServer";

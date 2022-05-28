@@ -1,21 +1,21 @@
 <launch>
 <node name="global_network_node" pkg="dt_global_network_client" type="dt_global_network_client_node" output="screen">
     <param name="product_key" value="h7zmo4JvXUW" />
-    <param name="device_name" value="R_UAV_0" />
-    <param name="device_secret" value="daaa813b46e389fff80cd1c52c012fdf"/>
-    <param name="iot_pub_topic" value="/h7zmo4JvXUW/PhysicalUAV0/user/PhysicalUAV0_Pub"/>
-    <param name="iot_sub_topic" value="/h7zmo4JvXUW/PhysicalUAV0/user/PhysicalUAV0_Sub"/>
-    <param name="ros_sub_topic" value="/R_UAV_0/Message_to_Cloud"/>
-    <param name="ros_pub_topic" value="/R_UAV_0/Message_from_Cloud"/>
-    <param name="ros_iot_state_pub_topic" value="/R_UAV_0/Cloud_State"/>
-    <param name="object_name" value="R_UAV_0"/>
+    <param name="device_name" value="PhysicalUAV1" />
+    <param name="device_secret" value="e2c9e07f96d7ab4d91ebbb2582a76fcc"/>
+    <param name="iot_pub_topic" value="/h7zmo4JvXUW/PhysicalUAV1/user/PhysicalUAV1_Pub"/>
+    <param name="iot_sub_topic" value="/h7zmo4JvXUW/PhysicalUAV1/user/PhysicalUAV1_Sub"/>
+    <param name="ros_sub_topic" value="/R_UAV_1/Message_to_Cloud"/>
+    <param name="ros_pub_topic" value="/R_UAV_1/Message_from_Cloud"/>
+    <param name="ros_iot_state_pub_topic" value="/R_UAV_1/Cloud_State"/>
+    <param name="object_name" value="R_UAV_1"/>
   </node>
 
 <node name="packing_and_unpacking_node" pkg="dtvr_message_packing_unpacking" type="dtvr_message_packing_unpacking_node" output="screen">
                                          <!--packing-->
-      <param name="SourceID" value="0"/>
-      <param name="TargetID" value="100"/>
-      <param name="DtObjectID" value="100"/>
+      <param name="SourceID" value="1"/>
+      <param name="TargetID" value="101"/>
+      <param name="DtObjectID" value="101"/>
       <param name="CloudMessagePubTopic" value="/R_UAV_0/Message_to_Cloud"/>
       <param name="GlobalPositionMessageSubTopic" value="/mavros/global_position/global"/>
       <param name="LocalPositionMessageSubTopic" value="/mavros/local_position/pose"/>

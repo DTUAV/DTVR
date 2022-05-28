@@ -205,9 +205,13 @@ int main(int argc, char *argv[])
     printf("aiot_mqtt_init failed\n");
     return -1;
   }
-  if (1 == public_instance) {
+  if (1 == public_instance)
+  {
     snprintf(host, 100, "%s.%s", product_key, url);
-  } else {
+  }
+  else
+ {
+ // std::cout<<"dddd"<<std::endl;
     snprintf(host, 100, "%s", url);
   }
   aiot_mqtt_setopt(mqtt_handle, AIOT_MQTTOPT_HOST, (void *)host);

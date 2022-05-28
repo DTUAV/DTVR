@@ -9,7 +9,7 @@
 #include <geometry_msgs/TwistStamped.h>
 #include "mavros_msgs/State.h"
 #include "mavros_msgs/GlobalPositionTarget.h"
-#include "mavros_msgs/BatteryStatus.h"
+#include "sensor_msgs/BatteryState.h"
 #include "x2struct/x2struct.hpp"
 #include "std_msgs/Bool.h"
 #include "geometry_msgs/Twist.h"
@@ -26,7 +26,7 @@ public:
   static void *run(void *args);
   void local_pos_sub_cb(const geometry_msgs::PoseStampedConstPtr& msg);
   void global_pos_sub_cb(const sensor_msgs::NavSatFixConstPtr& msg);
-  void battery_info_sub_cb(const mavros_msgs::BatteryStatusConstPtr& msg);
+  void battery_info_sub_cb(const sensor_msgs::BatteryStateConstPtr& msg);
   void state_info_sub_cb(const mavros_msgs::StateConstPtr &msg);
   void vel_info_sub_cb(const geometry_msgs::TwistStampedConstPtr& msg);
   void cloud_msg_cb(const dt_message_package::CloudMessageConstPtr& msg);

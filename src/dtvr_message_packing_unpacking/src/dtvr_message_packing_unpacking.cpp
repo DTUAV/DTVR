@@ -219,10 +219,10 @@ void dtvr_message_packing_unpacking::global_pos_sub_cb(const sensor_msgs::NavSat
   _altitude = msg.get()->altitude;
 }
 
-void dtvr_message_packing_unpacking::battery_info_sub_cb(const mavros_msgs::BatteryStatusConstPtr &msg)
+void dtvr_message_packing_unpacking::battery_info_sub_cb(const sensor_msgs::BatteryStateConstPtr &msg)
 {
   _voltage = msg.get()->voltage;
-  _remaining = msg.get()->remaining;
+  _remaining = msg.get()->percentage;
 }
 
 void dtvr_message_packing_unpacking::state_info_sub_cb(const mavros_msgs::StateConstPtr &msg)

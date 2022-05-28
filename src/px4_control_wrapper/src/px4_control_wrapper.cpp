@@ -194,7 +194,7 @@ void *px4_control_wrapper::auto_run(void *args)
 void px4_control_wrapper::vr_control_msg_sub_cb(const std_msgs::BoolConstPtr &msg)
 {
   _is_vr_control = msg.get()->data;
-  if(_is_start_vr_control&&!_is_start_vr_control)
+  if(_is_vr_control&&!_is_start_vr_control)
   {
     _is_start_vr_control = true;
     int flag_thread = pthread_create(&_auto_run,NULL,&px4_control_wrapper::auto_run,this);

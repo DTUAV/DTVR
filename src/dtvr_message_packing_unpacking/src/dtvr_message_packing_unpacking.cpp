@@ -288,6 +288,7 @@ void dtvr_message_packing_unpacking::cloud_msg_cb(const dt_message_package::Clou
         targetVelMsg.twist.angular.y = uavControlMsg.ComAY;
         targetVelMsg.twist.angular.z = uavControlMsg.ComAZ;
         _target_vel_pub.publish(targetVelMsg);
+//std::cout<<"dddddd"<<std::endl;
       }
     }
     else
